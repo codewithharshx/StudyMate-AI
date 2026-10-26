@@ -1,6 +1,6 @@
 Flask==3.0.3
-google-genai
+google-genai==2.33.0
 python-dotenv==1.0.1
-PyMuPDF
-faiss-cpu
-numpy
+PyMuPDF==1.28.2
+faiss-cpu==1.15.1
+numpy==2.5.4

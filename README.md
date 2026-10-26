@@ -402,6 +402,16 @@ Student Uploads PDF / TXT
      Grounded Answer
 ```
 
+### ⚠️ In-Memory FAISS Architecture & Serverless Note
+
+The RAG pipeline utilizes an **in-memory FAISS index** (`IndexFlatIP`) within the active Python process:
+- **Local Development (`python app.py`):** The vector store persists in memory for the duration of the server process.
+- **Serverless Environments (e.g., Vercel):** Serverless function instances are **stateless and ephemeral**. Document indexing at `/api/rag/upload` populates memory only within that specific instance. Subsequent questions to `/api/rag/ask` may route to a separate or cold instance where the in-memory index is reset.
+- **Recommended Production Storage Solutions:**
+  - **Managed Vector Databases:** Pinecone, Qdrant Cloud, or Chroma Cloud.
+  - **Relational Databases with Vector Extensions:** Supabase (PostgreSQL with `pgvector`) or Neon.
+  - **Object Storage Persistence:** Storing serialized FAISS index files in AWS S3 or Google Cloud Storage, hydrating on demand.
+
 ---
 
 # 🔐 Security & Validation
@@ -438,9 +448,10 @@ Create a `.env` file in the project directory:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 GEMINI_EMBEDDING_MODEL=gemini-embedding-001
 MAX_UPLOAD_SIZE_MB=10
+FLASK_DEBUG=false
 ```
 
 > **Important:** Never commit your `.env` file or expose your API key publicly.
@@ -488,9 +499,10 @@ Create a `.env` file in the project root and add your Gemini API key:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 GEMINI_EMBEDDING_MODEL=gemini-embedding-001
 MAX_UPLOAD_SIZE_MB=10
+FLASK_DEBUG=false
 ```
 
 ## 6. Run the Application

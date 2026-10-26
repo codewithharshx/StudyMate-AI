@@ -104,8 +104,8 @@ def _get_client():
         _client = genai.Client(api_key=api_key)
         return _client
     except Exception as exc:
-        logger.exception("Failed to initialize Gemini client: %s", type(exc).__name__)
-        raise AIServiceError("Could not initialize the Gemini AI service.") from exc
+        logger.error("Failed to initialize Gemini client [%s]", type(exc).__name__)
+        raise AIServiceError("Could not initialize the Gemini AI service.") from None
 
 
 def get_gemini_client():
@@ -125,17 +125,17 @@ def generate_with_gemini(user_prompt: str, system_instruction: str, max_output_t
                                                max_output_tokens=max_output_tokens),
         )
     except Exception as exc:
-        logger.exception("Gemini API request failed: %s", type(exc).__name__)
+        logger.error("Gemini API request failed [%s]", type(exc).__name__)
         message = str(exc).lower()
         if "api key" in message or "authentication" in message or "unauthenticated" in message:
-            raise AIServiceError("Gemini authentication failed. Please check your API key.") from exc
+            raise AIServiceError("Gemini authentication failed. Please check your API key.") from None
         if "quota" in message or "rate limit" in message or "resource exhausted" in message:
-            raise AIServiceError("Gemini API quota/rate limit reached. Please try again later.") from exc
+            raise AIServiceError("Gemini API quota/rate limit reached. Please try again later.") from None
         if "timeout" in message:
-            raise AIServiceError("Gemini took too long to respond. Please try again.") from exc
+            raise AIServiceError("Gemini took too long to respond. Please try again.") from None
         if "connection" in message or "network" in message:
-            raise AIServiceError("Could not connect to Gemini. Please check your internet connection.") from exc
-        raise AIServiceError("The Gemini AI service returned an error. Please try again.") from exc
+            raise AIServiceError("Could not connect to Gemini. Please check your internet connection.") from None
+        raise AIServiceError("The Gemini AI service returned an error. Please try again.") from None
     text = getattr(response, "text", None)
     if not text or not text.strip():
         raise AIServiceError("Gemini returned an empty response. Please try again.")

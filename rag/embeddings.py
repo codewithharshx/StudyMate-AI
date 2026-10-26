@@ -22,7 +22,7 @@ def embed_texts(texts, task_type):
     except AIServiceError:
         raise
     except Exception as exc:
-        raise AIServiceError("Study material embeddings could not be created. Please try again.") from exc
+        raise AIServiceError("Study material embeddings could not be created. Please try again.") from None
 
 
 def embed_documents(texts):

@@ -1,0 +1,22 @@
+# Environment variables (contains secrets)
+.env
+.env.*
+*.env
+*.env.*
+*.env.bak
+*.env.backup
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.egg-info/
+data/
+
+# OS / editor / build
+.DS_Store
+.vscode/
+.idea/
+.vercel/

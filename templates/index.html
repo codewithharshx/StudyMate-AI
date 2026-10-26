@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudyMate AI — AI Study Companion</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <span class="brand__mark">SM</span>
+        <div class="brand__text">
+          <span class="brand__name">StudyMate <em>AI</em></span>
+          <span class="brand__tagline">Your intelligent study & learning companion</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="page">
+
+    <!-- Hero / Mode Selection -->
+    <section class="hero" id="hero">
+      <p class="hero__eyebrow">Five tools. One desk.</p>
+      <h1 class="hero__title">Study smarter <span class="hl">with AI</span></h1>
+      <p class="hero__subtitle">Understand complex topics, practice with tailored quizzes, and chat with your uploaded notes.</p>
+
+      <div class="mode-grid" id="modeGrid">
+        <button class="mode-card" data-mode="summarize" data-title="Summarize Notes" data-icon="📝" data-desc="Turn long notes and lectures into a clean, structured summary with key terms.">
+          <span class="mode-card__index">01</span>
+          <span class="mode-card__icon">📝</span>
+          <span class="mode-card__title">Summarize Notes</span>
+          <span class="mode-card__desc">Turn long notes into a clean, structured summary.</span>
+        </button>
+
+        <button class="mode-card" data-mode="explain" data-title="Explain Concept" data-icon="💡" data-desc="Get a patient, plain-language walkthrough of any difficult concept with real-world analogies.">
+          <span class="mode-card__index">02</span>
+          <span class="mode-card__icon">💡</span>
+          <span class="mode-card__title">Explain Concept</span>
+          <span class="mode-card__desc">Get a plain-language walkthrough of any topic.</span>
+        </button>
+
+        <button class="mode-card" data-mode="improve" data-title="Improve Answer" data-icon="✍️" data-desc="Sharpen your written draft for clarity, academic vocabulary, and completeness.">
+          <span class="mode-card__index">03</span>
+          <span class="mode-card__icon">✍️</span>
+          <span class="mode-card__title">Improve Answer</span>
+          <span class="mode-card__desc">Sharpen a written answer before you submit it.</span>
+        </button>
+
+        <button class="mode-card" data-mode="quiz" data-title="Generate Quiz" data-icon="❓" data-desc="Test your knowledge by creating interactive, scored multiple-choice questions from your notes.">
+          <span class="mode-card__index">04</span>
+          <span class="mode-card__icon">❓</span>
+          <span class="mode-card__title">Generate Quiz</span>
+          <span class="mode-card__desc">Practice with a custom interactive quiz.</span>
+        </button>
+
+        <button class="mode-card" data-mode="rag" data-title="Ask My Notes" data-icon="📚" data-desc="Upload a PDF or TXT document and ask questions grounded strictly in your study material.">
+          <span class="mode-card__index">05</span>
+          <span class="mode-card__icon">📚</span>
+          <span class="mode-card__title">Ask My Notes</span>
+          <span class="mode-card__desc">Get verified answers based on your uploads.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Interactive Workspace (Revealed upon module selection) -->
+    <section class="workspace" id="workspace" hidden>
+
+      <!-- Input Card -->
+      <div class="workspace__card">
+        <button class="workspace__back" id="backBtn">← Back to Overview</button>
+        
+        <div class="workspace__head">
+          <span class="workspace__icon" id="wsIcon">📝</span>
+          <div>
+            <h2 class="workspace__title" id="wsTitle">Summarize Notes</h2>
+            <p class="workspace__desc" id="wsDesc">Turn long notes into a clean, structured summary.</p>
+          </div>
+        </div>
+
+        <!-- Standard Text Mode Panel (Summarize, Explain, Improve) -->
+        <div id="standardPanel">
+          <label class="field-label" for="contentInput">Your Study Material / Content</label>
+          <textarea id="contentInput" class="content-input" rows="10" maxlength="6000" placeholder="Paste your study notes, concept, or written draft here..."></textarea>
+          <div class="field-meta">
+            <span id="inputError" class="field-error"></span>
+            <span id="charCount" class="char-count">0 / 6000</span>
+          </div>
+          <div class="workspace__actions">
+            <button id="clearBtn" class="btn btn--ghost" type="button">Clear</button>
+            <button id="generateBtn" class="btn btn--primary" type="button">
+              <span class="btn-text">Generate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quiz Generation Panel -->
+        <div id="quizPanel" hidden>
+          <label class="field-label" for="quizContent">Study Notes For Quiz</label>
+          <textarea id="quizContent" class="content-input" rows="9" maxlength="6000" placeholder="Paste your topic notes here to generate multiple-choice questions..."></textarea>
+          
+          <div class="quiz-controls">
+            <label>
+              Questions
+              <select id="quizCount">
+                <option value="5" selected>5 Questions</option>
+                <option value="10">10 Questions</option>
+                <option value="15">15 Questions</option>
+              </select>
+            </label>
+            <label>
+              Difficulty
+              <select id="quizDifficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="workspace__actions">
+            <button id="newQuizBtn" class="btn btn--ghost" type="button">Clear</button>
+            <button id="quizBtn" class="btn btn--primary" type="button">
+              <span class="btn-text">Generate Quiz</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RAG / Document Search Panel -->
+        <div id="ragPanel" hidden>
+          <label class="field-label" for="studyFile">Upload Study Document (PDF or TXT, max 10 MB)</label>
+          <input id="studyFile" class="file-input" type="file" accept=".pdf,.txt">
+          
+          <div class="workspace__actions" style="margin-top: 12px; margin-bottom: 20px;">
+            <button id="uploadBtn" class="btn btn--primary" type="button">
+              <span class="btn-text">Index Study Notes</span>
+            </button>
+          </div>
+          
+          <p id="uploadStatus" class="upload-status"></p>
+
+          <label class="field-label" for="ragQuestion">Ask a Question from Document</label>
+          <textarea id="ragQuestion" class="content-input" rows="4" maxlength="1500" placeholder="e.g., What are the key properties of this algorithm according to the notes?"></textarea>
+          
+          <div class="workspace__actions">
+            <button id="askBtn" class="btn btn--primary" type="button">
+              <span class="btn-text">Ask Document</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card: AI Text Output -->
+      <div class="workspace__card result-card" id="resultCard" hidden>
+        <div class="result-card__head">
+          <h3>AI Response</h3>
+          <button id="copyBtn" class="btn btn--small" type="button">Copy Response</button>
+        </div>
+        <div id="resultContent" class="result-content"></div>
+      </div>
+
+      <!-- Result Card: Interactive Quiz -->
+      <div class="workspace__card result-card" id="quizCard" hidden>
+        <div class="result-card__head">
+          <h3>Practice Quiz</h3>
+          <button id="generateNewQuizBtn" class="btn btn--small" type="button">Try Another Topic</button>
+        </div>
+        <form id="quizForm"></form>
+        <button id="submitQuizBtn" class="btn btn--primary" type="button" style="margin-top: 16px;">Submit Quiz</button>
+        <div id="quizScore" class="quiz-score" hidden></div>
+      </div>
+
+      <!-- Result Card: RAG Grounded Answer -->
+      <div class="workspace__card result-card" id="ragResultCard" hidden>
+        <div class="result-card__head">
+          <h3>Answer From Your Notes</h3>
+        </div>
+        <div id="ragAnswer" class="result-content"></div>
+        <div id="ragSources" class="sources"></div>
+      </div>
+
+      <!-- Error Notification Card -->
+      <div class="workspace__card error-card" id="errorCard" hidden>
+        <p id="errorText"></p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Application Logic -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

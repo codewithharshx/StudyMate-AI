@@ -1,4 +1,4 @@
-# 📚 StudyMate AI
+# 📚 StudyMate AI.
 
 ### AI-Powered Study Companion with Quiz Generation & RAG
 
